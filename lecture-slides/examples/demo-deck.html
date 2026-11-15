@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example &middot; how a deck gets made</title>
+<!--
+  WORKED EXAMPLE — the eight archetypes with real content. Not a template:
+  read it, then scaffold from templates/deck.html instead. Every gate green:
+
+      python3 scripts/render_deck.py --deck examples/demo-deck.html --strict
+      python3 scripts/audit_deck.py  --deck examples/demo-deck.html --orientation-ladder 6
+      python3 scripts/solve_fig_height.py --deck examples/demo-deck.html
+
+  Every section below is one ARCHETYPE and is commented with the rule it
+  embodies and the reference file that governs it. Delete the sections you do
+  not use; keep the <style> block verbatim — it is the whole house style and it
+  is calibrated: body = 32 px = 24 pt, credit = 16.8 px = 12.6 pt, nothing else.
+
+  Runtime is local (../assets/vendor/reveal/). No CDN, so the deck presents offline.
+  reveal.js 4.6.1, MIT — see ../assets/vendor/reveal/THIRD_PARTY_NOTICES.md
+-->
+<link rel="stylesheet" href="../assets/vendor/reveal/reveal.css">
+<link rel="stylesheet" href="../assets/vendor/reveal/white.css">
+<style>
+  :root{ --accent:#B4432F; --accent2:#1F3A5F; --gold:#B8860B; --gray:#666; }
+  html,body{ background:#fff; }
+  .reveal{ font-family:"Helvetica Neue","Arial","PingFang SC","Microsoft YaHei",sans-serif; }
+  .reveal h1,.reveal h2,.reveal h3{ font-family:inherit; font-weight:700; color:var(--accent2);
+    text-transform:none; letter-spacing:.01em; }
+
+  /* ============================================================================
+     EXACTLY THREE TYPE ROLES, NO FOURTH.  references/density-target.md  §5
+     base font-size is 42px, so 1em = 42px = 31.5pt.
+        TITLE   h2 .  1.38em =  58.0px = 43.5pt      (target ~44pt)
+        BODY    p,li  .762em =  32.0px = 24.0pt      (target median 24pt)
+        CREDIT  .src  .40em  =  16.8px = 12.6pt      (target 11-16pt)
+     Anything that is neither a 24pt message nor a 12.6pt credit must be deleted,
+     not set in a smaller size. There is no 14-19pt middle tier.                  */
+  .reveal h1{ font-size:1.90em; line-height:1.08; }
+  .reveal h2{ font-size:1.38em; line-height:1.14; margin-bottom:.30em; }
+  .reveal p,.reveal li{ font-size:.762em; line-height:1.34; }
+  .reveal li{ margin:.17em 0; }
+  .reveal ul{ margin-left:1.0em; }
+  .reveal a{ color:var(--accent); }
+  /* bold is the ONLY emphasis: no coloured bold, no italics-for-emphasis, no boxes */
+  .reveal strong,.reveal b{ color:inherit; font-weight:700; }
+
+  /* credit tier: figure sources, citations, URLs */
+  .figcap,p.figcap.src,.src{ font-size:.40em !important; color:var(--gray) !important;
+    margin:.16em 0 0 0 !important; line-height:1.26 !important; text-align:center; }
+  .figcap a{ color:var(--accent); text-decoration:underline; }
+  .figcap .srctag{ background:var(--accent2); color:#fff; border-radius:3px;
+    padding:0 .34em; margin-right:.35em; font-size:.95em; }
+
+  .qslide{ font-size:.762em; font-weight:700; color:var(--accent2); line-height:1.34; }
+  .formula{ display:block; text-align:center; font-size:1.02em; font-family:"Times New Roman",serif;
+    color:var(--accent2); margin:.35em 0; }
+  .formula b{ color:inherit; }
+  .center{ text-align:center; }
+  /* the take-home line: one bold sentence at body size, never a box */
+  .take{ font-size:.762em; font-weight:700; color:var(--accent2);
+    line-height:1.28; margin:.30em 0 0; text-align:center; max-width:97%; }
+
+  .reveal img{ max-width:100%; }
+  .reveal img.plain{ border:none; box-shadow:0 2px 12px rgba(0,0,0,.25); border-radius:4px; background:#fff; }
+
+  /* ---- layout primitives ---- */
+  .cols{ display:flex; gap:.8em; align-items:flex-start; justify-content:center; }
+  .cols>div{ flex:1; min-width:0; }
+  .cols>div.figcol{ flex:1.22; }
+  .figcol{ display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.2em; }
+  .figcol img{ max-width:100%; height:auto; margin:0; }
+  .figcol .figcap{ margin-bottom:0; }
+  .botrow{ margin-top:.35em; }
+  .figwide{ display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.15em; }
+  .figwide img{ max-width:100%; height:auto; margin:0; }
+  .underrow{ display:flex; gap:1.1em; align-items:flex-start; margin-top:.4em; }
+  .underrow>div{ flex:1; min-width:0; }
+
+  /* ---- orientation ladders are the ONLY surviving native table (see
+     references/density-target.md §7 open question). Last row carries the
+     punchline. Everything else becomes a bold line or a figure. Type sits at
+     the body floor: 0.645em = 27px = 20.3pt.                                  ---- */
+  .reveal table{ font-size:.645em; margin:.30em auto; border-collapse:collapse; width:100%; max-width:100%; }
+  .reveal table th{ background:var(--accent2); color:#fff; padding:.34em .5em; font-weight:600; text-align:left; }
+  .reveal table td{ padding:.46em .5em; border-bottom:1px solid #ddd; vertical-align:top; }
+  .reveal table tr:nth-child(even) td{ background:#f6f8fa; }
+  .reveal table tr.punch td{ background:#fdf3f0; }
+  td.num{ text-align:center; white-space:nowrap; }
+
+  /* ---- part dividers: a full-bleed picture, one orientation line, no prose ----
+     a divider must reach the edge of the 1180x820 frame, i.e. past reveal's 4%
+     margin, so the backdrop/veil overscan by exactly that margin               */
+  .reveal .slides>section.bleed{ height:100%; padding:0; }
+  .reveal .slides>section>div.divider{
+    width:100%; height:100%; margin:0; padding:0; border-radius:0;
+    position:relative; background:#101a2b; color:#fff; overflow:visible;
+    display:flex; flex-direction:column; justify-content:flex-end; }
+  .divider .bg{ position:absolute; inset:-17px -24px; background:#101a2b; }
+  .divider .bg::after{ content:""; position:absolute; inset:0; opacity:.42;
+    background-image:var(--bg); background-size:cover; background-position:center; background-repeat:no-repeat; }
+  .divider .veil{ position:absolute; inset:-17px -24px;
+    background:linear-gradient(180deg,rgba(10,16,26,.62) 0%,rgba(10,16,26,.86) 46%,rgba(10,16,26,.97) 100%); }
+  .divider .cap{ position:relative; z-index:2; padding:1.9em 2.3em 2.1em; }
+  .divider .num{ font-size:1.45em; font-weight:800; color:#f4b183; line-height:.88; }
+  .divider h1{ color:#fff; font-size:1.55em; margin:.10em 0 .12em; }
+  .divider .one{ color:#e2ebf8; font-size:.68em; margin:0; max-width:90%; }
+  .divider .src{ position:absolute; left:2.3em; bottom:1.05em; z-index:2; font-size:.40em;
+    color:rgba(255,255,255,.72); text-align:left; }
+  .divider .src a{ color:rgba(255,255,255,.85); }
+
+  /* ---- slide 1 IS the agenda: 60pt title, four bold pillars, contact line ---- */
+  .title-slide{ height:100%; display:flex; flex-direction:column; justify-content:center;
+    background:rgba(255,255,255,.90); border-radius:16px; padding:1.4em 1.7em; }
+  .title-slide .kicker{ font-size:.40em; color:var(--gray); margin:0 0 .45em;
+    letter-spacing:.07em; text-transform:uppercase; }
+  .title-slide h1{ font-size:1.90em; margin:0 0 .62em; line-height:1.05; }
+  .title-slide .pillars{ display:grid; grid-template-columns:1fr 1fr; gap:.5em 1.5em; margin:0 0 .8em; }
+  .title-slide .pillars div{ font-size:.762em; font-weight:400; color:#222; line-height:1.30; }
+  .title-slide .pillars div b{ font-weight:700; color:var(--accent2); }
+  .title-slide .pillars div span{ display:block; font-size:.66em; font-weight:400;
+    color:var(--gray); line-height:1.24; margin-top:.14em; }
+  .title-slide .contact{ font-size:.40em; color:var(--gray); margin:0; }
+  .title-slide .credit-bg{ font-size:.30em; color:#8a8a8a; margin:.55em 0 0; line-height:1.28; }
+  /* the credit-bg tier (.30em = 12.6px) exists ONLY for a background-image licence
+     line, which is not audience content. It is not a fourth type role.         */
+
+  .reveal .progress{ color:var(--accent); }
+  .reveal .slide-number{ font-size:.6em; background:rgba(255,255,255,.85); color:#333; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================================
+     S1 — TITLE SLIDE = THE AGENDA.
+     references/density-target.md §4, first move. Four bold pillars, each with a five-word
+     orientation line, are the deck's parts. There is no separate "course map"
+     slide: this replaces it. Hand over the four pillar SENTENCES, each <=6 words.
+     Background image: put it on data-background-image and pay the licence line in
+     .credit-bg. Crop it so the title stays legible at 35% opacity.
+============================================================================ -->
+<!-- ============================================================================
+     S1 — TITLE SLIDE = THE AGENDA.  references/density-target.md §4, first move.
+     Four bold pillars, each with a five-word orientation line. No separate
+     "course map" slide: this replaces it.
+============================================================================ -->
+<section data-background-image="assets/bg_title.png" data-background-opacity="0.22"><div class="title-slide">
+  <p class="kicker">Teaching skills &middot; worked example</p>
+  <h1>HOW A DECK<br>GETS MADE</h1>
+  <div class="pillars">
+    <div><b>The cut</b><span>words fall, figures grow</span></div>
+    <div><b>The gate</b><span>checks that can fail</span></div>
+    <div><b>The library</b><span>every figure has a source</span></div>
+    <div><b>The handoff</b><span>HTML first, slides by hand</span></div>
+  </div>
+  <p class="contact">Worked example &middot; no course attached</p>
+  <p class="credit-bg">Background: generated plate by <code>make_figures.py</code>, not data</p>
+</div></section>
+
+<!-- ============================================================================
+     S2 — THE DEFAULT SLIDE: text left, figure right, take-home under both.
+     references/layout.md §2–§5: nothing below the figure in its column, caption
+     is the source line only, and the first bullet decodes the axes.
+============================================================================ -->
+<section><h2>The cut is the work</h2>
+<div class="cols">
+  <div>
+    <ul>
+      <li><b>Reading it:</b> words per deck across, figure share up.</li>
+      <li><b>One quarter of the words</b> carry the same lecture.</li>
+      <li><b>Figures grew 2.5&times;</b> as the text went.</li>
+    </ul>
+  </div>
+  <div class="figcol">
+    <img src="assets/fig_cut.png" alt="Two bars comparing words per deck and figure area per slide for a draft and the instructor's deck">
+    <p class="figcap src"><span class="srctag">[course]</span> Own figure; numbers from
+      <code>references/density-target.md</code> §1</p>
+  </div>
+</div>
+<div class="botrow"><div class="take"><b>Cutting the words is what makes room for the figure that replaces them.</b></div></div>
+<aside class="notes">Say the 0.24&times; out loud, then point at the second bar. Do not read the bullets.</aside>
+</section>
+
+<!-- ============================================================================
+     S3 — FULL-PAGE FIGURE.  references/layout.md §15: only when the commentary
+     below is short. Three cells under a wide figure beat a paragraph under it.
+============================================================================ -->
+<section><h2>Emptiness is measurable</h2>
+<div class="figwide">
+  <img src="assets/fig_cover.png" alt="Two slide frames side by side, the left one with an empty band under its title, the right one filled">
+  <p class="figcap src"><span class="srctag">[course]</span> Own figure; void share from
+    <code>scripts/audit_deck.py</code></p>
+</div>
+<div class="underrow">
+  <div><ul><li><b>Left:</b> ink stops two-thirds down.</li></ul></div>
+  <div><ul><li><b>Right:</b> the same three blocks, spread.</li></ul></div>
+  <div><ul><li><b>Void</b> is the largest empty rectangle.</li></ul></div>
+</div>
+</section>
+
+<!-- ============================================================================
+     S4 — THE QUESTION SLIDE: a question, one formula, one line. The deck's breath.
+============================================================================ -->
+<section><h2>Why isn't a smaller font the answer?</h2>
+<p class="qslide center">Shrink the type and you have written a document, not a slide.</p>
+<span class="formula"><b>24 pt message &nbsp;&middot;&nbsp; 12.6 pt credit &nbsp;&middot;&nbsp; nothing between</b></span>
+<p class="center">Three roles. No fourth.</p>
+</section>
+
+<!-- ============================================================================
+     S5 — PART DIVIDER: a full-bleed picture, zero prose.
+     references/density-target.md §4, second move.
+============================================================================ -->
+<section class="bleed"><div class="divider">
+  <div class="bg" style="--bg:url('assets/bg_part.png')"></div>
+  <div class="veil"></div>
+  <div class="cap">
+    <div class="num">Part 2</div>
+    <h1>THE GATE</h1>
+    <p class="one">Six checks, in order, each able to fail.</p>
+  </div>
+  <p class="src">Plate generated by <code>make_figures.py</code> &mdash; no data</p>
+</div></section>
+
+<!-- ============================================================================
+     S6 — THE ORIENTATION LADDER. The only surviving native table, and only
+     because it is declared: --orientation-ladder 6 (references/density-target.md §7).
+     Last row carries the punchline.
+============================================================================ -->
+<section><h2>The gate, in the order it can fail</h2>
+<table style="font-size:.80em">
+  <tr><th>Stage</th><th>Question</th><th>Cost of skipping</th></tr>
+  <tr><td>1</td><td>Does the markup close?</td><td>silent dead edits</td></tr>
+  <tr><td>2</td><td>Do the assets resolve?</td><td>a blue box on stage</td></tr>
+  <tr><td>3</td><td>Does the render overflow?</td><td>type past the frame</td></tr>
+  <tr class="punch"><td>4</td><td><b>Has anyone looked at it?</b></td><td><b>the deck is a claim</b></td></tr>
+</table>
+<p class="center"><b>Every stage above 3 is a script. Stage 4 is not.</b></p>
+</section>
+
+<!-- ============================================================================
+     S7 — MIRRORED TWO-COLUMN: figure left, text right.
+============================================================================ -->
+<section><h2>Three roles, and a fourth that isn't</h2>
+<div class="cols">
+  <div class="figcol">
+    <img src="assets/fig_types.png" alt="Three stacked bars labelled title, message and credit with their pixel and point sizes">
+    <p class="figcap src"><span class="srctag">[course]</span> Own figure; sizes from
+      <code>templates/deck.html</code> &lt;style&gt;</p>
+  </div>
+  <div>
+    <ul>
+      <li><b>Reading it:</b> a stack, not a scale.</li>
+      <li><b>Middle tier is banned</b>, so nothing can hide there.</li>
+      <li><b>The credit tier</b> is for sources only.</li>
+      <li><b>The sizes are set once</b>, in the style block.</li>
+      <li><b>Nothing is set in 18 pt</b> to make it fit.</li>
+    </ul>
+  </div>
+</div>
+<div class="botrow"><div class="take"><b>If a sentence needs a size of its own, delete the sentence.</b></div></div>
+</section>
+
+<!-- ============================================================================
+     S8 — THE LAST SLIDE: one bold sentence, nothing else.
+============================================================================ -->
+<section><h2>&nbsp;</h2>
+<div class="take" style="font-size:1.10em; line-height:1.30"><b>A deck is done when the gate is green and someone has looked at it.</b></div>
+</section>
+
+</div>
+</div>
+<script src="../assets/vendor/reveal/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    progress: true,
+    controls: false,      /* keyboard only: no on-screen controls to collide with content */
+    transition: 'none',   /* stable renders: a transition makes every screenshot a race */
+    backgroundTransition: 'none',  /* backgrounds fade on their OWN clock — a screenshot
+                                     200ms after a slide change catches the previous plate
+                                     mid-fade, and the gate then measures a tint that is
+                                     not on the slide (found on this very example deck) */
+    width: 1180,
+    height: 820,
+    margin: 0.04,
+    pdfSeparateFragments: false
+  });
+</script>
+</body>
+</html>

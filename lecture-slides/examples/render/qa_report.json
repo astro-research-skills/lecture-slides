@@ -1,0 +1,326 @@
+{
+ "deck": "/Users/shangguan/Softwares/my_modules/dsh-skills/lecture-slides/examples/demo-deck.html",
+ "viewport": [
+  1180,
+  820
+ ],
+ "slides": [
+  {
+   "slide": 1,
+   "png": "slide-01.png",
+   "imgs": [],
+   "background_images": [
+    "assets/bg_title.png"
+   ],
+   "overflows": [],
+   "section_over": {
+    "top": -103,
+    "right": 0,
+    "bottom": -102,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 119,
+    "left": 24,
+    "right": 1156,
+    "bottom": 701,
+    "w": 1133,
+    "h": 582
+   },
+   "columns": [],
+   "chip_collisions": []
+  },
+  {
+   "slide": 2,
+   "png": "slide-02.png",
+   "imgs": [
+    {
+     "src": "assets/fig_cut.png",
+     "ok": true,
+     "natural_w": 1260,
+     "natural_h": 1019,
+     "disp_w": 605,
+     "disp_h": 489,
+     "ar": 1.237,
+     "complete": true
+    }
+   ],
+   "background_images": [],
+   "overflows": [],
+   "section_over": {
+    "top": -67,
+    "right": 0,
+    "bottom": -67,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 83,
+    "left": 24,
+    "right": 1156,
+    "bottom": 737,
+    "w": 1133,
+    "h": 654
+   },
+   "columns": [
+    {
+     "fig_cls": "figcol",
+     "fig_h": 520,
+     "text_h": 271,
+     "gap": -249
+    }
+   ],
+   "chip_collisions": []
+  },
+  {
+   "slide": 3,
+   "png": "slide-03.png",
+   "imgs": [
+    {
+     "src": "assets/fig_cover.png",
+     "ok": true,
+     "natural_w": 1667,
+     "natural_h": 745,
+     "disp_w": 1133,
+     "disp_h": 506,
+     "ar": 2.238,
+     "complete": true
+    }
+   ],
+   "background_images": [],
+   "overflows": [],
+   "section_over": {
+    "top": -11,
+    "right": 0,
+    "bottom": -10,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 27,
+    "left": 24,
+    "right": 1156,
+    "bottom": 793,
+    "w": 1133,
+    "h": 766
+   },
+   "columns": [],
+   "chip_collisions": []
+  },
+  {
+   "slide": 4,
+   "png": "slide-04.png",
+   "imgs": [],
+   "background_images": [],
+   "overflows": [],
+   "section_over": {
+    "top": -255,
+    "right": 0,
+    "bottom": -256,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 272,
+    "left": 24,
+    "right": 1156,
+    "bottom": 548,
+    "w": 1133,
+    "h": 276
+   },
+   "columns": [],
+   "chip_collisions": []
+  },
+  {
+   "slide": 5,
+   "png": "slide-05.png",
+   "imgs": [],
+   "background_images": [
+    "file:///Users/shangguan/Softwares/my_modules/dsh-skills/lecture-slides/examples/assets/bg_part.png"
+   ],
+   "overflows": [],
+   "section_over": {
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "columns": [],
+   "chip_collisions": []
+  },
+  {
+   "slide": 6,
+   "png": "slide-06.png",
+   "imgs": [],
+   "background_images": [],
+   "overflows": [],
+   "section_over": {
+    "top": -136,
+    "right": 0,
+    "bottom": -136,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 153,
+    "left": 24,
+    "right": 1156,
+    "bottom": 667,
+    "w": 1133,
+    "h": 515
+   },
+   "columns": [],
+   "chip_collisions": []
+  },
+  {
+   "slide": 7,
+   "png": "slide-07.png",
+   "imgs": [
+    {
+     "src": "assets/fig_types.png",
+     "ok": true,
+     "natural_w": 915,
+     "natural_h": 702,
+     "disp_w": 605,
+     "disp_h": 464,
+     "ar": 1.303,
+     "complete": true
+    }
+   ],
+   "background_images": [],
+   "overflows": [],
+   "section_over": {
+    "top": -79,
+    "right": 0,
+    "bottom": -80,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 96,
+    "left": 24,
+    "right": 1156,
+    "bottom": 724,
+    "w": 1133,
+    "h": 628
+   },
+   "columns": [
+    {
+     "fig_cls": "figcol",
+     "fig_h": 495,
+     "text_h": 448,
+     "gap": -47
+    }
+   ],
+   "chip_collisions": []
+  },
+  {
+   "slide": 8,
+   "png": "slide-08.png",
+   "imgs": [],
+   "background_images": [],
+   "overflows": [],
+   "section_over": {
+    "top": -296,
+    "right": 0,
+    "bottom": -296,
+    "left": 0
+   },
+   "frame": {
+    "top": 16,
+    "left": 24,
+    "right": 1156,
+    "bottom": 804,
+    "w": 1133,
+    "h": 787
+   },
+   "section": {
+    "top": 312,
+    "left": 24,
+    "right": 1156,
+    "bottom": 507,
+    "w": 1133,
+    "h": 195
+   },
+   "columns": [],
+   "chip_collisions": []
+  }
+ ],
+ "console_errors": [],
+ "broken_images": [],
+ "overflow_slides": [],
+ "background_images": [
+  {
+   "slide": 1,
+   "url": "assets/bg_title.png",
+   "ok": true,
+   "natural_w": 1180
+  },
+  {
+   "slide": 5,
+   "url": "file:///Users/shangguan/Softwares/my_modules/dsh-skills/lecture-slides/examples/assets/bg_part.png",
+   "ok": true,
+   "natural_w": 1180
+  }
+ ],
+ "load_error": null
+}

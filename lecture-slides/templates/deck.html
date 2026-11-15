@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture N &middot; Title Goes Here</title>
+<!--
+  HOUSE DECK TEMPLATE — copy, never edit in place.
+
+  Scaffold a new lecture with:
+      bash scripts/init_deck.sh slides/lectureN/dsh
+  which copies this file, the vendored reveal.js, and the three documents.
+
+  Every section below is one ARCHETYPE and is commented with the rule it
+  embodies and the reference file that governs it. Delete the sections you do
+  not use; keep the <style> block verbatim — it is the whole house style and it
+  is calibrated: body = 32 px = 24 pt, credit = 16.8 px = 12.6 pt, nothing else.
+
+  Runtime is local (vendor/reveal/). No CDN, so the deck presents offline.
+  reveal.js 4.6.1, MIT — see ../assets/vendor/reveal/THIRD_PARTY_NOTICES.md
+-->
+<link rel="stylesheet" href="vendor/reveal/reveal.css">
+<link rel="stylesheet" href="vendor/reveal/white.css">
+<style>
+  :root{ --accent:#B4432F; --accent2:#1F3A5F; --gold:#B8860B; --gray:#666; }
+  html,body{ background:#fff; }
+  .reveal{ font-family:"Helvetica Neue","Arial","PingFang SC","Microsoft YaHei",sans-serif; }
+  .reveal h1,.reveal h2,.reveal h3{ font-family:inherit; font-weight:700; color:var(--accent2);
+    text-transform:none; letter-spacing:.01em; }
+
+  /* ============================================================================
+     EXACTLY THREE TYPE ROLES, NO FOURTH.  references/density-target.md  §5
+     base font-size is 42px, so 1em = 42px = 31.5pt.
+        TITLE   h2 .  1.38em =  58.0px = 43.5pt      (target ~44pt)
+        BODY    p,li  .762em =  32.0px = 24.0pt      (target median 24pt)
+        CREDIT  .src  .40em  =  16.8px = 12.6pt      (target 11-16pt)
+     Anything that is neither a 24pt message nor a 12.6pt credit must be deleted,
+     not set in a smaller size. There is no 14-19pt middle tier.                  */
+  .reveal h1{ font-size:1.90em; line-height:1.08; }
+  .reveal h2{ font-size:1.38em; line-height:1.14; margin-bottom:.30em; }
+  .reveal p,.reveal li{ font-size:.762em; line-height:1.34; }
+  .reveal li{ margin:.17em 0; }
+  .reveal ul{ margin-left:1.0em; }
+  .reveal a{ color:var(--accent); }
+  /* bold is the ONLY emphasis: no coloured bold, no italics-for-emphasis, no boxes */
+  .reveal strong,.reveal b{ color:inherit; font-weight:700; }
+
+  /* credit tier: figure sources, citations, URLs */
+  .figcap,p.figcap.src,.src{ font-size:.40em !important; color:var(--gray) !important;
+    margin:.16em 0 0 0 !important; line-height:1.26 !important; text-align:center; }
+  .figcap a{ color:var(--accent); text-decoration:underline; }
+  .figcap .srctag{ background:var(--accent2); color:#fff; border-radius:3px;
+    padding:0 .34em; margin-right:.35em; font-size:.95em; }
+
+  .qslide{ font-size:.762em; font-weight:700; color:var(--accent2); line-height:1.34; }
+  .formula{ display:block; text-align:center; font-size:1.02em; font-family:"Times New Roman",serif;
+    color:var(--accent2); margin:.35em 0; }
+  .formula b{ color:inherit; }
+  .center{ text-align:center; }
+  /* the take-home line: one bold sentence at body size, never a box */
+  .take{ font-size:.762em; font-weight:700; color:var(--accent2);
+    line-height:1.28; margin:.30em 0 0; text-align:center; max-width:97%; }
+
+  .reveal img{ max-width:100%; }
+  .reveal img.plain{ border:none; box-shadow:0 2px 12px rgba(0,0,0,.25); border-radius:4px; background:#fff; }
+
+  /* ---- layout primitives ---- */
+  .cols{ display:flex; gap:.8em; align-items:flex-start; justify-content:center; }
+  .cols>div{ flex:1; min-width:0; }
+  .cols>div.figcol{ flex:1.22; }
+  .figcol{ display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.2em; }
+  .figcol img{ max-width:100%; height:auto; margin:0; }
+  .figcol .figcap{ margin-bottom:0; }
+  .botrow{ margin-top:.35em; }
+  .figwide{ display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.15em; }
+  .figwide img{ max-width:100%; height:auto; margin:0; }
+  .underrow{ display:flex; gap:1.1em; align-items:flex-start; margin-top:.4em; }
+  .underrow>div{ flex:1; min-width:0; }
+
+  /* ---- orientation ladders are the ONLY surviving native table (see
+     references/density-target.md §7 open question). Last row carries the
+     punchline. Everything else becomes a bold line or a figure. Type sits at
+     the body floor: 0.645em = 27px = 20.3pt.                                  ---- */
+  .reveal table{ font-size:.645em; margin:.30em auto; border-collapse:collapse; width:100%; max-width:100%; }
+  .reveal table th{ background:var(--accent2); color:#fff; padding:.34em .5em; font-weight:600; text-align:left; }
+  .reveal table td{ padding:.46em .5em; border-bottom:1px solid #ddd; vertical-align:top; }
+  .reveal table tr:nth-child(even) td{ background:#f6f8fa; }
+  .reveal table tr.punch td{ background:#fdf3f0; }
+  td.num{ text-align:center; white-space:nowrap; }
+
+  /* ---- part dividers: a full-bleed picture, one orientation line, no prose ----
+     a divider must reach the edge of the 1180x820 frame, i.e. past reveal's 4%
+     margin, so the backdrop/veil overscan by exactly that margin               */
+  .reveal .slides>section.bleed{ height:100%; padding:0; }
+  .reveal .slides>section>div.divider{
+    width:100%; height:100%; margin:0; padding:0; border-radius:0;
+    position:relative; background:#101a2b; color:#fff; overflow:visible;
+    display:flex; flex-direction:column; justify-content:flex-end; }
+  .divider .bg{ position:absolute; inset:-17px -24px; background:#101a2b; }
+  .divider .bg::after{ content:""; position:absolute; inset:0; opacity:.42;
+    background-image:var(--bg); background-size:cover; background-position:center; background-repeat:no-repeat; }
+  .divider .veil{ position:absolute; inset:-17px -24px;
+    background:linear-gradient(180deg,rgba(10,16,26,.62) 0%,rgba(10,16,26,.86) 46%,rgba(10,16,26,.97) 100%); }
+  .divider .cap{ position:relative; z-index:2; padding:1.9em 2.3em 2.1em; }
+  .divider .num{ font-size:1.45em; font-weight:800; color:#f4b183; line-height:.88; }
+  .divider h1{ color:#fff; font-size:1.55em; margin:.10em 0 .12em; }
+  .divider .one{ color:#e2ebf8; font-size:.68em; margin:0; max-width:90%; }
+  .divider .src{ position:absolute; left:2.3em; bottom:1.05em; z-index:2; font-size:.40em;
+    color:rgba(255,255,255,.72); text-align:left; }
+  .divider .src a{ color:rgba(255,255,255,.85); }
+
+  /* ---- slide 1 IS the agenda: 60pt title, four bold pillars, contact line ---- */
+  .title-slide{ height:100%; display:flex; flex-direction:column; justify-content:center;
+    background:rgba(255,255,255,.90); border-radius:16px; padding:1.4em 1.7em; }
+  .title-slide .kicker{ font-size:.40em; color:var(--gray); margin:0 0 .45em;
+    letter-spacing:.07em; text-transform:uppercase; }
+  .title-slide h1{ font-size:1.90em; margin:0 0 .62em; line-height:1.05; }
+  .title-slide .pillars{ display:grid; grid-template-columns:1fr 1fr; gap:.5em 1.5em; margin:0 0 .8em; }
+  .title-slide .pillars div{ font-size:.762em; font-weight:400; color:#222; line-height:1.30; }
+  .title-slide .pillars div b{ font-weight:700; color:var(--accent2); }
+  .title-slide .pillars div span{ display:block; font-size:.66em; font-weight:400;
+    color:var(--gray); line-height:1.24; margin-top:.14em; }
+  .title-slide .contact{ font-size:.40em; color:var(--gray); margin:0; }
+  .title-slide .credit-bg{ font-size:.30em; color:#8a8a8a; margin:.55em 0 0; line-height:1.28; }
+  /* the credit-bg tier (.30em = 12.6px) exists ONLY for a background-image licence
+     line, which is not audience content. It is not a fourth type role.         */
+
+  .reveal .progress{ color:var(--accent); }
+  .reveal .slide-number{ font-size:.6em; background:rgba(255,255,255,.85); color:#333; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================================
+     S1 — TITLE SLIDE = THE AGENDA.
+     references/density-target.md §4, first move. Four bold pillars, each with a five-word
+     orientation line, are the deck's parts. There is no separate "course map"
+     slide: this replaces it. Hand over the four pillar SENTENCES, each <=6 words.
+     Background image: put it on data-background-image and pay the licence line in
+     .credit-bg. Crop it so the title stays legible at 35% opacity.
+============================================================================ -->
+<section data-background-image="assets/title_bg.jpg" data-background-opacity="0.35"><div class="title-slide">
+  <p class="kicker">Course Name &middot; Lecture N</p>
+  <h1>DECK TITLE<br>IN TWO LINES</h1>
+  <div class="pillars">
+    <div><b>Pillar one</b><span>what it buys the student</span></div>
+    <div><b>Pillar two</b><span>what it buys the student</span></div>
+    <div><b>Pillar three</b><span>what it buys the student</span></div>
+    <div><b>Pillar four</b><span>what it buys the student</span></div>
+  </div>
+  <p class="contact">Instructor &middot; Room &middot; email@example.org</p>
+  <p class="credit-bg">Background: AUTHOR, INSTITUTION &mdash; image title (ID)</p>
+</div></section>
+
+<!-- ============================================================================
+     S2 — THE DEFAULT SLIDE: text left, figure right, take-home under both.
+     references/layout.md §2–§5. Three things matter:
+       * nothing sits below the figure in its column (.botrow is outside .cols),
+         otherwise the image absorbs every later overflow "fix" and shrinks;
+       * the caption is the SOURCE LINE ONLY — author, year, journal, figure, link;
+       * the figure's max-height is SOLVED, not eyeballed:
+             python3 scripts/solve_fig_height.py --deck DECK.html
+     <=4 bullets, one line each, one clause each (references/writing.md §1).
+     The first bullet DECODES the figure: x axis, y axis, what one mark is
+     (references/writing.md §5).
+============================================================================ -->
+<section><h2>A title states this slide's claim</h2>
+<div class="cols">
+  <div>
+    <ul>
+      <li><b>Reading it:</b> X across, Y up; points are OBJECTS, the curve is the MODEL.</li>
+      <li><b>Claim two.</b> One clause, with its number and its citation.</li>
+      <li><b>Claim three.</b> One clause.</li>
+    </ul>
+  </div>
+  <div class="figcol">
+    <img src="assets/figure_one.png" alt="One-line description of what the figure shows">
+    <p class="figcap src"><span class="srctag">Fig. 2</span> Author+ Year, Journal Vol, Page, Fig. 2 &#8599;
+      <a href="https://arxiv.org/abs/0000.00000">arXiv:0000.00000</a></p>
+  </div>
+</div>
+<div class="botrow"><div class="take"><b>The one sentence the audience must leave with.</b></div></div>
+</section>
+
+<!-- ============================================================================
+     S3 — FULL-PAGE FIGURE.
+     references/layout.md §15: only when the commentary below is SHORT. A wide
+     figure with three short bullets underneath wins; a wide figure with a
+     paragraph and a box underneath loses — the wrapped text eats the height you
+     freed. Measure rendered figure area before and after, revert the losers.
+============================================================================ -->
+<section><h2>When the figure is the argument</h2>
+<div class="figwide">
+  <img src="assets/figure_wide.png" alt="One-line description of the wide figure">
+  <p class="figcap src"><span class="srctag">Fig. 1</span> Author+ Year, Journal Vol, Page, Fig. 1</p>
+</div>
+<div class="underrow">
+  <div><ul><li><b>Left cell.</b> Reading key: axes and marks.</li></ul></div>
+  <div><ul><li><b>Middle cell.</b> The claim the figure makes.</li></ul></div>
+  <div><ul><li><b>Right cell.</b> Why it matters for the lecture.</li></ul></div>
+</div>
+</section>
+
+<!-- ============================================================================
+     S4 — THE QUESTION SLIDE.
+     A question in the title, the question restated as a bold line, one formula,
+     nothing else. Divider slides and question slides are the deck's breath:
+     <=15 words. references/density-target.md §1 expects 5-11 such slides a deck.
+============================================================================ -->
+<section><h2>Why does the answer have to be this way?</h2>
+<p class="qslide center">State the puzzle in one sentence, then the equation that answers it.</p>
+<span class="formula"><b>x = a / b</b>&nbsp;&nbsp;&rarr;&nbsp;&nbsp;ln x = ln a &minus; ln b</span>
+<p class="center">One line naming what the symbol means.</p>
+</section>
+
+<!-- ============================================================================
+     S5 — PART DIVIDER: a full-bleed picture, zero prose.
+     references/density-target.md §4, second move. The part title lives in the image or in
+     .one, never a paragraph. Set --bg on the .bg div to the picture URL.
+============================================================================ -->
+<section class="bleed"><div class="divider">
+  <div class="bg" style="--bg:url('assets/divider_bg.jpg')"></div>
+  <div class="veil"></div>
+  <div class="cap">
+    <div class="num">Part 1</div>
+    <h1>PART TITLE, FOUR WORDS</h1>
+    <p class="one">One orientation line: where we are and why here.</p>
+  </div>
+  <p class="src">Image: AUTHOR, INSTITUTION &mdash; title (ID)</p>
+</div></section>
+
+<!-- ============================================================================
+     S6 — THE ORIENTATION LADDER (the only surviving native table).
+     references/density-target.md §7 keeps this an OPEN question: 20 of 20 draft
+     tables died, but the instructor's own in-progress deck carries two styled
+     ladders on orientation slides. Use one only if all four hold: 4-5 rows, a
+     ladder or comparison rather than prose, the last row carrying the punchline
+     (tr.punch), and it replaces text that would otherwise be a list of rows.
+     Grow the TYPE (.645em), never the row gaps (references/layout.md §16).
+============================================================================ -->
+<section><h2>The ladder, if you must have one</h2>
+<table>
+  <tr><th>Rung</th><th>Method</th><th class="num">Reach</th></tr>
+  <tr><td>1</td><td>Parallax</td><td class="num">1 kpc</td></tr>
+  <tr><td>2</td><td>Pulsating stars</td><td class="num">40 Mpc</td></tr>
+  <tr><td>3</td><td>Stellar populations</td><td class="num">100 Mpc</td></tr>
+  <tr class="punch"><td>4</td><td><b>The punchline row</b></td><td class="num">z &lt; 1</td></tr>
+</table>
+<p class="center"><b>If the table needs a fourth column of prose, it is not a ladder.</b></p>
+</section>
+
+<!-- ============================================================================
+     S7 — MIRRORED TWO-COLUMN: figure left, text right.
+     Same primitive as S2 with the columns swapped. Use it to keep the eye moving
+     down a run of two-column slides. Nothing sits below the figure here either.
+============================================================================ -->
+<section><h2>Same primitive, mirrored</h2>
+<div class="cols">
+  <div class="figcol">
+    <img src="assets/figure_two.png" alt="One-line description">
+    <p class="figcap src"><span class="srctag">[course]</span> Own figure; numbers from Author+ Year</p>
+  </div>
+  <div>
+    <ul>
+      <li><b>Reading it:</b> what the axes are, what a mark is.</li>
+      <li><b>Claim.</b> One clause.</li>
+    </ul>
+  </div>
+</div>
+<div class="botrow"><div class="take"><b>Bold marks the one sentence you want remembered.</b></div></div>
+</section>
+
+<!-- ============================================================================
+     S8 — THE LAST SLIDE: one bold sentence, nothing else.
+     No summary bullets, no reference list, no "thank you" grid. If a claim only
+     appears here, it belongs on the slide that argues it.
+============================================================================ -->
+<section><h2>&nbsp;</h2>
+<div class="take" style="font-size:1.10em; line-height:1.30"><b>The verdict of the lecture, in one sentence.</b></div>
+</section>
+
+</div>
+</div>
+<script src="vendor/reveal/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    progress: true,
+    controls: false,      /* keyboard only: no on-screen controls to collide with content */
+    transition: 'none',   /* stable renders: a transition makes every screenshot a race */
+    backgroundTransition: 'none',  /* backgrounds fade on their OWN clock — a screenshot
+                                     200ms after a slide change catches the previous plate
+                                     mid-fade, and the gate then measures a tint that is
+                                     not on the slide (found on this very example deck) */
+    width: 1180,
+    height: 820,
+    margin: 0.04,
+    pdfSeparateFragments: false
+  });
+</script>
+</body>
+</html>
